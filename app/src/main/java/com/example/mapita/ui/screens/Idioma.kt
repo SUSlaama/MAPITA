@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
@@ -21,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.mapita.R
@@ -39,7 +42,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Acerda_de(navController: NavHostController) {
+fun Idioma(navController: NavHostController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -117,25 +120,62 @@ fun Acerda_de(navController: NavHostController) {
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Icon(
+                    painterResource(id = R.drawable.ic_idioma),
+                    contentDescription = "Icono de idiomas",
+                    modifier = Modifier.size(120.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
                 Text(
-                    "Acerca de",
+                    "Idiomas",
                     style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.padding(vertical = 24.dp)
                 )
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Botón para cada coordinador
+                    OutlinedButton(
+                        onClick = { /* Acción para Coordinador de industrial */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text("Español")
+                    }
 
-                Text(
-                    "Lorem ipsum dolor sit amet,\n\n" +
-                            "consectetur adipiscing elit, sed\n\n" +
-                            "do eiusmod tempor incididunt\n\n" +
-                            "ut labore et dolore magnam\n\n" +
-                            "aliquam quaerat voluptatem.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(vertical = 16.dp)
-                )
+                    OutlinedButton(
+                        onClick = { /* Acción para Coordinador administracion */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text("Ingles")
+                    }
 
-                Spacer(modifier = Modifier.weight(1f))
+                    OutlinedButton(
+                        onClick = { /* Acción para Coordinador de electricnica */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text("Frances")
+                    }
 
-                // Botón "Regresar"
+                    OutlinedButton(
+                        onClick = { /* Acción para Coordinador de materiales */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text("Chino")
+                    }
+                }
+
+                Spacer(modifier = Modifier.padding(16.dp))
+
                 Button(
                     onClick = { navController.navigate("main") },
                     modifier = Modifier

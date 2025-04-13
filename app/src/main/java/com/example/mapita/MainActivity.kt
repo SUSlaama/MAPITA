@@ -29,6 +29,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mapita.ui.screens.Acerda_de
+import com.example.mapita.ui.screens.Idioma
+import com.example.mapita.ui.screens.Soporte
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -57,7 +59,7 @@ fun AppWithSplashScreen() {
     if (isLoading) {
         SplashScreen()
     } else {
-        NavHost( // Único NavHost (elimina el SetupNavGraph)
+        NavHost(
             navController = navController,
             startDestination = "login"
         ) {
@@ -73,6 +75,12 @@ fun AppWithSplashScreen() {
             }
             composable("acerca_de") {
                 Acerda_de(navController)
+            }
+            composable("soporte") {
+                Soporte(navController)
+            }
+            composable("idioma") {
+                Idioma(navController)
             }
         }
     }
@@ -173,7 +181,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 NavigationDrawerItem(
                     label = { Text("Soporte Tecnico") },
                     selected = false,
-                    onClick = { /* Acción de perfil */ }
+                    onClick = { navController.navigate("soporte") }
                 )
                 NavigationDrawerItem(
                     label = { Text("Acerca de ") },
@@ -183,7 +191,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 NavigationDrawerItem(
                     label = { Text("Idioma ") },
                     selected = false,
-                    onClick = { /* Acción de configuración */ }
+                    onClick = { navController.navigate("idioma") }
                 )
             }
         }
