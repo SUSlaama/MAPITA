@@ -4,14 +4,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.mapita.ui.theme.MAPITATheme
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.Image
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.ui.draw.clip
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,23 +33,242 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MAPITATheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppWithSplashScreen()
             }
         }
     }
 }
 
 @Composable
+fun AppWithSplashScreen() {
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        delay(2000)
+        isLoading = false
+    }
+
+    if (isLoading) {
+        SplashScreen()
+    } else {
+        LoginScreen()
+    }
+}
+
+@Composable
+fun SplashScreen() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            CircularProgressIndicator()
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("Cargando...", style = MaterialTheme.typography.bodyLarge)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LoginScreen() {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    var isLoggedIn by remember { mutableStateOf(false) }
+
+    if (isLoggedIn) {
+        MainScreen(onLogout = { isLoggedIn = false })
+    } else {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = { Text("Iniciar sesión") }
+                )
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Correo electrónico") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Contraseña") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        errorMessage = ""
+                        when {
+                            email.isBlank() || !email.contains("@") -> {
+                                errorMessage = "Ingresa un correo válido"
+                            }
+                            password.length < 8 -> {
+                                errorMessage = "La contraseña debe tener al menos 8 caracteres"
+                            }
+                            else -> {
+                                isLoggedIn = true
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Ingresar")
+                }
+                if (errorMessage.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(errorMessage, color = MaterialTheme.colorScheme.error)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScreen(onLogout: () -> Unit) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Text("Opciones", modifier = Modifier.padding(10.dp), style = MaterialTheme.typography.titleMedium)
+                Divider()
+                NavigationDrawerItem(
+                    label = { Text("Soporte Tecnico") },
+                    selected = false,
+                    onClick = { /* Acción de perfil */ }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Acerca de ") },
+                    selected = false,
+                    onClick = { /* Acción de configuración */ }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Idioma ") },
+                    selected = false,
+                    onClick = { /* Acción de configuración */ }
+                )
+            }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                            Text("Instituto Tecnológico de Ags", style = MaterialTheme.typography.titleMedium)
+                            Text("Nombre de usuario", style = MaterialTheme.typography.bodySmall)
+                        }
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        }) {
+                            Icon(Icons.Default.Menu, contentDescription = "Menú")
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { /* Acción imagen de perfil */ }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_perfil),
+                                contentDescription = "Imagen de perfil",
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                )
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(16.dp)
+                    .fillMaxSize()
+            ) {
+                Button(
+                    onClick = { /* Acción para Acceso */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text("Acceso")
+                }
+
+                Button(
+                    onClick = { /* Acción para Estacionamiento */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text("Estacionamiento")
+                }
+
+                Button(
+                    onClick = { /* Acción para Busca tu salón */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text("Busca tu salón")
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Divider()
+
+                Button(
+                    onClick = onLogout,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text("Salir", color = MaterialTheme.colorScheme.onError)
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+@Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
-    )
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(text = "¡Hola, $name!", style = MaterialTheme.typography.headlineMedium)
+    }
 }
 
 @Preview(showBackground = true)
