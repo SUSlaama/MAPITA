@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.mapita.ui.theme.MAPITATheme
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -24,6 +25,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.ui.draw.clip
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.mapita.ui.screens.Acerda_de
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -42,6 +47,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppWithSplashScreen() {
     var isLoading by remember { mutableStateOf(true) }
+    val navController = rememberNavController() // Único NavController
 
     LaunchedEffect(Unit) {
         delay(2000)
@@ -51,7 +57,24 @@ fun AppWithSplashScreen() {
     if (isLoading) {
         SplashScreen()
     } else {
-        LoginScreen()
+        NavHost( // Único NavHost (elimina el SetupNavGraph)
+            navController = navController,
+            startDestination = "login"
+        ) {
+            //Aqui van todas las pantallas que creemos
+            composable("login") {
+                LoginScreen(onLoginSuccess = { navController.navigate("main") })
+            }
+            composable("main") {
+                MainScreen(
+                    onLogout = { navController.navigate("login") },
+                    navController = navController
+                )
+            }
+            composable("acerca_de") {
+                Acerda_de(navController)
+            }
+        }
     }
 }
 
@@ -73,68 +96,63 @@ fun SplashScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(onLoginSuccess: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
-    var isLoggedIn by remember { mutableStateOf(false) }
 
-    if (isLoggedIn) {
-        MainScreen(onLogout = { isLoggedIn = false })
-    } else {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text("Iniciar sesión") }
-                )
-            }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Correo electrónico") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Contraseña") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        errorMessage = ""
-                        when {
-                            email.isBlank() || !email.contains("@") -> {
-                                errorMessage = "Ingresa un correo válido"
-                            }
-                            password.length < 8 -> {
-                                errorMessage = "La contraseña debe tener al menos 8 caracteres"
-                            }
-                            else -> {
-                                isLoggedIn = true
-                            }
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Iniciar sesión") }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Correo electrónico") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    errorMessage = ""
+                    when {
+                        email.isBlank() || !email.contains("@") -> {
+                            errorMessage = "Ingresa un correo válido"
                         }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Ingresar")
-                }
-                if (errorMessage.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(errorMessage, color = MaterialTheme.colorScheme.error)
-                }
+                        password.length < 8 -> {
+                            errorMessage = "La contraseña debe tener al menos 8 caracteres"
+                        }
+                        else -> {
+                            onLoginSuccess()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ingresar")
+            }
+            if (errorMessage.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(errorMessage, color = MaterialTheme.colorScheme.error)
             }
         }
     }
@@ -142,7 +160,7 @@ fun LoginScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(onLogout: () -> Unit) {
+fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -160,7 +178,7 @@ fun MainScreen(onLogout: () -> Unit) {
                 NavigationDrawerItem(
                     label = { Text("Acerca de ") },
                     selected = false,
-                    onClick = { /* Acción de configuración */ }
+                    onClick = { navController.navigate("acerca_de") }
                 )
                 NavigationDrawerItem(
                     label = { Text("Idioma ") },
@@ -253,11 +271,6 @@ fun MainScreen(onLogout: () -> Unit) {
         }
     }
 }
-
-
-
-
-
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
