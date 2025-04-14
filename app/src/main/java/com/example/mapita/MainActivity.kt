@@ -4,34 +4,29 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.mapita.ui.theme.MAPITATheme
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.ui.res.painterResource
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.foundation.Image
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.ui.draw.clip
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mapita.ui.screens.Acerda_de
-import com.example.mapita.ui.screens.Estacionamiento
-import com.example.mapita.ui.screens.Idioma
-import com.example.mapita.ui.screens.Soporte
+import com.example.mapita.ui.screens.*
+import com.example.mapita.ui.theme.MAPITATheme
+import com.example.myapplication.screens.CarrerasScreen
+import com.example.myapplication.screens.DetalleSalonScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -50,7 +45,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppWithSplashScreen() {
     var isLoading by remember { mutableStateOf(true) }
-    val navController = rememberNavController() // Único NavController
+    val navController = rememberNavController()
 
     LaunchedEffect(Unit) {
         delay(2000)
@@ -64,7 +59,6 @@ fun AppWithSplashScreen() {
             navController = navController,
             startDestination = "login"
         ) {
-            //Aqui van todas las pantallas que creemos
             composable("login") {
                 LoginScreen(onLoginSuccess = { navController.navigate("main") })
             }
@@ -77,12 +71,11 @@ fun AppWithSplashScreen() {
             composable("acerca_de") {
                 Acerda_de(navController)
             }
-            composable("soporte") {
-                Soporte(navController)
-            }
-            composable("idioma") {
-                Idioma(navController)
-            }
+            composable("carreras") { CarrerasScreen(navController) }
+            composable("edifices") { EdificiosScreen(navController) } // Corregido el nombre aquí
+            composable("metalledSalon") { DetalleSalonScreen(navController) }
+            composable("soporte") { Soporte(navController) }
+            composable("idioma") { Idioma(navController) }
             composable("estacionamiento") {
                 Estacionamiento(
                     onBackClick = { navController.popBackStack() },
@@ -186,7 +179,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 Text("Opciones", modifier = Modifier.padding(10.dp), style = MaterialTheme.typography.titleMedium)
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text("Soporte Tecnico") },
+                    label = { Text("Soporte Técnico") },
                     selected = false,
                     onClick = { navController.navigate("soporte") }
                 )
@@ -261,7 +254,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 }
 
                 Button(
-                    onClick = { /* Acción para Busca tu salón */ },
+                    onClick = { navController.navigate("carreras") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
