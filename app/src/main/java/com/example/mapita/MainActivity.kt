@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mapita.ui.screens.Acerda_de
+import com.example.mapita.ui.screens.Estacionamiento
 import com.example.mapita.ui.screens.Idioma
 import com.example.mapita.ui.screens.Soporte
 import kotlinx.coroutines.delay
@@ -81,6 +82,12 @@ fun AppWithSplashScreen() {
             }
             composable("idioma") {
                 Idioma(navController)
+            }
+            composable("estacionamiento") {
+                Estacionamiento(
+                    onBackClick = { navController.popBackStack() },
+                    navController = navController
+                )
             }
         }
     }
@@ -245,7 +252,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 }
 
                 Button(
-                    onClick = { /* Acción para Estacionamiento */ },
+                    onClick = { navController.navigate("estacionamiento") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
