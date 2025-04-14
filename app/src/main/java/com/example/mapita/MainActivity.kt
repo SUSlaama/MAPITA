@@ -30,7 +30,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mapita.ui.screens.Acerda_de
 import com.example.mapita.ui.screens.Idioma
+import com.example.mapita.ui.screens.Perfil
 import com.example.mapita.ui.screens.Soporte
+import com.example.mapita.ui.screens3.ExamenIngreso
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -39,8 +41,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MAPITATheme {
-                AppWithSplashScreen()
+            MAPITATheme(
+                dynamicColor = true // Activa Dynamic Colors
+            ) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    AppWithSplashScreen()
+                }
             }
         }
     }
@@ -81,6 +90,12 @@ fun AppWithSplashScreen() {
             }
             composable("idioma") {
                 Idioma(navController)
+            }
+            composable("perfil") {
+                Perfil(navController)
+            }
+            composable("examen_ingreso") {
+                ExamenIngreso(navController)
             }
         }
     }
@@ -146,9 +161,11 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                         email.isBlank() || !email.contains("@") -> {
                             errorMessage = "Ingresa un correo válido"
                         }
+
                         password.length < 8 -> {
                             errorMessage = "La contraseña debe tener al menos 8 caracteres"
                         }
+
                         else -> {
                             onLoginSuccess()
                         }
@@ -176,7 +193,11 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Text("Opciones", modifier = Modifier.padding(10.dp), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    "Opciones",
+                    modifier = Modifier.padding(10.dp),
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Divider()
                 NavigationDrawerItem(
                     label = { Text("Soporte Tecnico") },
@@ -200,8 +221,14 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
             topBar = {
                 TopAppBar(
                     title = {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                            Text("Instituto Tecnológico de Ags", style = MaterialTheme.typography.titleMedium)
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                "Instituto Tecnológico de Ags",
+                                style = MaterialTheme.typography.titleMedium
+                            )
                             Text("Nombre de usuario", style = MaterialTheme.typography.bodySmall)
                         }
                     },
@@ -215,9 +242,9 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { /* Acción imagen de perfil */ }) {
+                        IconButton(onClick = { navController.navigate("perfil") }) {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_perfil),
+                                painter = painterResource(id = R.drawable.account_circle),
                                 contentDescription = "Imagen de perfil",
                                 modifier = Modifier
                                     .size(36.dp)
@@ -233,12 +260,20 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(16.dp)
-                    .fillMaxSize()
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
-                    onClick = { /* Acción para Acceso */ },
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "logo",
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .size(360.dp)
+                )
+
+                Button(
+                    onClick = { navController.navigate("examen_ingreso") },
+                    modifier = Modifier
                         .padding(vertical = 8.dp)
                 ) {
                     Text("Acceso")
@@ -247,7 +282,6 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 Button(
                     onClick = { /* Acción para Estacionamiento */ },
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(vertical = 8.dp)
                 ) {
                     Text("Estacionamiento")
@@ -256,7 +290,6 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 Button(
                     onClick = { /* Acción para Busca tu salón */ },
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(vertical = 8.dp)
                 ) {
                     Text("Busca tu salón")
@@ -270,32 +303,11 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                     onClick = onLogout,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(vertical = 8.dp)
                 ) {
                     Text("Salir", color = MaterialTheme.colorScheme.onError)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(text = "¡Hola, $name!", style = MaterialTheme.typography.headlineMedium)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MAPITATheme {
-        Greeting("Android")
     }
 }
