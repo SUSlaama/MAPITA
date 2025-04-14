@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -32,7 +34,6 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
@@ -46,20 +47,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mapita.ui.screens.Acerda_de
+import com.example.mapita.ui.screens.EdificiosScreen
+import com.example.mapita.ui.screens.Estacionamiento
 import com.example.mapita.ui.screens.Idioma
 import com.example.mapita.ui.screens.Perfil
 import com.example.mapita.ui.screens.Soporte
 import com.example.mapita.ui.screens3.ExamenIngreso
 import com.example.mapita.ui.theme.MAPITATheme
+import com.example.myapplication.screens.CarrerasScreen
+import com.example.myapplication.screens.DetalleSalonScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -68,15 +76,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MAPITATheme(
-                dynamicColor = true // Activa Dynamic Colors
-            ) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    AppWithSplashScreen()
-                }
+            MAPITATheme {
+                AppWithSplashScreen()
             }
         }
     }
@@ -85,7 +86,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppWithSplashScreen() {
     var isLoading by remember { mutableStateOf(true) }
-    val navController = rememberNavController() // Único NavController
+    val navController = rememberNavController()
 
     LaunchedEffect(Unit) {
         delay(2000)
@@ -99,7 +100,6 @@ fun AppWithSplashScreen() {
             navController = navController,
             startDestination = "login"
         ) {
-            //Aqui van todas las pantallas que creemos
             composable("login") {
                 LoginScreen(onLoginSuccess = { navController.navigate("main") })
             }
@@ -112,11 +112,26 @@ fun AppWithSplashScreen() {
             composable("acerca_de") {
                 Acerda_de(navController)
             }
+            composable("carreras") {
+                CarrerasScreen(navController)
+            }
+            composable("edifices") {
+                EdificiosScreen(navController)
+            } // Corregido el nombre aquí
+            composable("metalledSalon") {
+                DetalleSalonScreen(navController)
+            }
             composable("soporte") {
                 Soporte(navController)
             }
             composable("idioma") {
                 Idioma(navController)
+            }
+            composable("estacionamiento") {
+                Estacionamiento(
+                    onBackClick = { navController.popBackStack() },
+                    navController = navController
+                )
             }
             composable("perfil") {
                 Perfil(navController)
@@ -227,7 +242,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text("Soporte Tecnico") },
+                    label = { Text("Soporte Técnico") },
                     selected = false,
                     onClick = { navController.navigate("soporte") }
                 )
@@ -287,37 +302,40 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(16.dp)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.logo),
-                    contentDescription = "logo",
+                    contentDescription = "QR",
                     modifier = Modifier
                         .size(360.dp)
                 )
-
                 Button(
                     onClick = { navController.navigate("examen_ingreso") },
                     modifier = Modifier
                         .padding(vertical = 8.dp)
+                        .width(200.dp)
                 ) {
                     Text("Acceso")
                 }
 
                 Button(
-                    onClick = { /* Acción para Estacionamiento */ },
+                    onClick = { navController.navigate("estacionamiento") },
                     modifier = Modifier
                         .padding(vertical = 8.dp)
+                        .width(200.dp)
                 ) {
                     Text("Estacionamiento")
                 }
 
                 Button(
-                    onClick = { /* Acción para Busca tu salón */ },
+                    onClick = { navController.navigate("carreras") },
                     modifier = Modifier
                         .padding(vertical = 8.dp)
+                        .width(200.dp)
                 ) {
                     Text("Busca tu salón")
                 }
@@ -331,10 +349,31 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
                     modifier = Modifier
                         .padding(vertical = 8.dp)
+                        .width(200.dp)
                 ) {
                     Text("Salir", color = MaterialTheme.colorScheme.onError)
                 }
             }
         }
+    }
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(text = "¡Hola, $name!", style = MaterialTheme.typography.headlineMedium)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    MAPITATheme {
+        Greeting("Android")
     }
 }
