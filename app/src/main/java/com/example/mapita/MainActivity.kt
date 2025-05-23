@@ -82,6 +82,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+//Prueba
 
 @Composable
 fun AppWithSplashScreen() {
