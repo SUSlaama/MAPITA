@@ -127,13 +127,11 @@ fun ExamenIngreso(navController: NavHostController) {
                     .padding(16.dp)
                     .fillMaxSize()
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.qr_code),
+                Image(
+                    painter = painterResource(id = R.drawable.qracceso),
                     contentDescription = "QR",
                     modifier = Modifier
-                        .size(360.dp)
-                        .clip(CircleShape),
-                    tint = MaterialTheme.colorScheme.primary
+                        .size(340.dp)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
