@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -62,17 +63,17 @@ fun Perfil(navController: NavHostController) {
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text("Soporte Tecnico") },
+                    label = { Text(stringResource(R.string.st_modal)) },
                     selected = false,
                     onClick = { navController.navigate("soporte") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Acerca de ") },
+                    label = { Text(stringResource(R.string.about_modal)) },
                     selected = false,
                     onClick = { navController.navigate("acerca_de") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Idioma ") },
+                    label = { Text(stringResource(R.string.language_modal)) },
                     selected = false,
                     onClick = { navController.navigate("idioma") }
                 )
@@ -104,7 +105,7 @@ fun Perfil(navController: NavHostController) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { /* Acción imagen de perfil */ }) {
+                        IconButton(onClick = { navController.navigate("perfil") }) {
                             Image(
                                 painter = painterResource(id = R.drawable.account_circle),
                                 contentDescription = "Imagen de perfil",
@@ -141,7 +142,7 @@ fun Perfil(navController: NavHostController) {
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                 ) {
-                    Text("Escoger una nueva foto")
+                    Text(stringResource(R.string.change_photo))
                 }
 
                 Button(
@@ -149,7 +150,7 @@ fun Perfil(navController: NavHostController) {
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                 ) {
-                    Text("Regresar")
+                    Text(stringResource(R.string.back))
                 }
             }
         }

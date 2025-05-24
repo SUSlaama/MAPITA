@@ -33,18 +33,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.mapita.R
+import com.example.mapita.viewmodel.IdiomaViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Idioma(navController: NavHostController) {
+fun Idioma(
+    navController: NavHostController,
+    languageViewModel: IdiomaViewModel = viewModel()
+) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -57,17 +65,17 @@ fun Idioma(navController: NavHostController) {
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text("Soporte Tecnico") },
+                    label = { Text(stringResource(R.string.st_modal)) },
                     selected = false,
                     onClick = { navController.navigate("soporte") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Acerca de ") },
+                    label = { Text(stringResource(R.string.about_modal)) },
                     selected = false,
                     onClick = { navController.navigate("acerca_de") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Idioma ") },
+                    label = { Text(stringResource(R.string.language_modal)) },
                     selected = false,
                     onClick = { navController.navigate("idioma") }
                 )
@@ -83,7 +91,7 @@ fun Idioma(navController: NavHostController) {
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                "Instituto Tecnológico de Ags",
+                                stringResource(R.string.instituto_tecnologico_de_ags),
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text("Nombre de usuario", style = MaterialTheme.typography.bodySmall)
@@ -99,9 +107,9 @@ fun Idioma(navController: NavHostController) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { /* Acción imagen de perfil */ }) {
+                        IconButton(onClick = { navController.navigate("perfil") }) {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_perfil),
+                                painter = painterResource(id = R.drawable.account_circle),
                                 contentDescription = "Imagen de perfil",
                                 modifier = Modifier
                                     .size(36.dp)
@@ -127,7 +135,7 @@ fun Idioma(navController: NavHostController) {
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    "Idiomas",
+                    stringResource(R.string.change_language),
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(vertical = 24.dp)
@@ -138,39 +146,24 @@ fun Idioma(navController: NavHostController) {
                 ) {
                     // Botón para cada coordinador
                     OutlinedButton(
-                        onClick = { /* Acción para Coordinador de industrial */ },
+                        onClick = {
+                            languageViewModel.changeLanguage("es")
+                            (context as? android.app.Activity)?.recreate() },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                     ) {
-                        Text("Español")
+                        Text(stringResource(R.string.lan_español))
                     }
 
                     OutlinedButton(
-                        onClick = { /* Acción para Coordinador administracion */ },
+                        onClick = { languageViewModel.changeLanguage("en")
+                            (context as? android.app.Activity)?.recreate() },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                     ) {
-                        Text("Ingles")
-                    }
-
-                    OutlinedButton(
-                        onClick = { /* Acción para Coordinador de electricnica */ },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                    ) {
-                        Text("Frances")
-                    }
-
-                    OutlinedButton(
-                        onClick = { /* Acción para Coordinador de materiales */ },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                    ) {
-                        Text("Chino")
+                        Text(stringResource(R.string.lan_english))
                     }
                 }
 
@@ -182,7 +175,7 @@ fun Idioma(navController: NavHostController) {
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
                 ) {
-                    Text("Regresar")
+                    Text(stringResource(R.string.back))
                 }
             }
         }

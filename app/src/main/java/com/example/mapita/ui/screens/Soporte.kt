@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -57,17 +58,17 @@ fun Soporte(navController: NavHostController) {
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text("Soporte Tecnico") },
+                    label = { Text(stringResource(R.string.st_modal)) },
                     selected = false,
                     onClick = { navController.navigate("soporte") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Acerca de ") },
+                    label = { Text(stringResource(R.string.about_modal)) },
                     selected = false,
                     onClick = { navController.navigate("acerca_de") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Idioma ") },
+                    label = { Text(stringResource(R.string.language_modal)) },
                     selected = false,
                     onClick = { navController.navigate("idioma") }
                 )
@@ -99,9 +100,9 @@ fun Soporte(navController: NavHostController) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { /* Acción imagen de perfil */ }) {
+                        IconButton(onClick = { navController.navigate("perfil") }) {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_perfil),
+                                painter = painterResource(id = R.drawable.account_circle),
                                 contentDescription = "Imagen de perfil",
                                 modifier = Modifier
                                     .size(36.dp)
@@ -127,7 +128,7 @@ fun Soporte(navController: NavHostController) {
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    "Contactos y soporte",
+                    stringResource(R.string.contactos_y_soporte),
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(vertical = 24.dp)
@@ -182,7 +183,7 @@ fun Soporte(navController: NavHostController) {
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
                 ) {
-                    Text("Regresar")
+                    Text(stringResource(R.string.back))
                 }
             }
         }

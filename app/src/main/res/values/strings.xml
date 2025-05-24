@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">MAPITA</string>
+    <string name="loading">Cargando...</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="enter_main">Ingresar</string>
+    <string name="options">Opciones</string>
+    <string name="st_modal">Soporte Técnico</string>
+    <string name="about_modal">"Acerca de "</string>
+    <string name="language_modal">"Idioma "</string>
+    <string name="instituto_tecnologico_de_ags" translatable="false">Instituto Tecnológico de Ags</string>
+    <string name="str_acceso_btn">Acceso</string>
+    <string name="str_estacionamiento_btn">Estacionamiento</string>
+    <string name="str_busca_tu_salon_btn">Busca tu salón</string>
+    <string name="exit_main">Salir</string>
+    <string name="change_language">Idiomas</string>
+    <string name="lan_español">Español</string>
+    <string name="lan_english">Ingles</string>
+    <string name="back">Regresar</string>
+    <string name="exam">Examen de ingreso</string>
+    <string name="contactos_y_soporte">Contactos y soporte</string>
+    <string name="change_photo">Escoger una nueva foto</string>
 </resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MAPITA</string>
+    <string name="loading">Loading...</string>
+    <string name="login">Sign in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="enter_main">Enter</string>
+    <string name="options">Options</string>
+    <string name="st_modal">Technical Support</string>
+    <string name="about_modal">"About"</string>
+    <string name="language_modal">"Language"</string>
+    <string name="str_acceso_btn">Access</string>
+    <string name="str_estacionamiento_btn">Parking</string>
+    <string name="str_busca_tu_salon_btn">Find your classroom</string>
+    <string name="exit_main">Exit</string>
+    <string name="change_language">Languages</string>
+    <string name="lan_español">Spanish</string>
+    <string name="lan_english">English</string>
+    <string name="back">Back</string>
+    <string name="exam">Entrance exam</string>
+    <string name="contactos_y_soporte">Contacts and support</string>
+    <string name="change_photo">Select a new photo</string>
+</resources>
