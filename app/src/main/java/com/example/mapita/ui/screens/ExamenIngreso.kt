@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -63,17 +64,17 @@ fun ExamenIngreso(navController: NavHostController) {
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text("Soporte Tecnico") },
+                    label = { Text(stringResource(R.string.st_modal)) },
                     selected = false,
                     onClick = { navController.navigate("soporte") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Acerca de ") },
+                    label = { Text(stringResource(R.string.about_modal)) },
                     selected = false,
                     onClick = { navController.navigate("acerca_de") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Idioma ") },
+                    label = { Text(stringResource(R.string.language_modal)) },
                     selected = false,
                     onClick = { navController.navigate("idioma") }
                 )
@@ -105,7 +106,7 @@ fun ExamenIngreso(navController: NavHostController) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { /* Acción imagen de perfil */ }) {
+                        IconButton(onClick = { navController.navigate("perfil") }) {
                             Image(
                                 painter = painterResource(id = R.drawable.account_circle),
                                 contentDescription = "Imagen de perfil",
@@ -127,19 +128,17 @@ fun ExamenIngreso(navController: NavHostController) {
                     .padding(16.dp)
                     .fillMaxSize()
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.qr_code),
+                Image(
+                    painter = painterResource(id = R.drawable.qracceso),
                     contentDescription = "QR",
                     modifier = Modifier
-                        .size(360.dp)
-                        .clip(CircleShape),
-                    tint = MaterialTheme.colorScheme.primary
+                        .size(340.dp)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Text(
-                    "Examen de ingreso",
+                    stringResource(R.string.exam),
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp
                 )
@@ -151,7 +150,7 @@ fun ExamenIngreso(navController: NavHostController) {
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                 ) {
-                    Text("Regresar")
+                    Text(stringResource(R.string.back))
                 }
             }
         }

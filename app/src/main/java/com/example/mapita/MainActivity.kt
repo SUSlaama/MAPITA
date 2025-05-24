@@ -1,5 +1,6 @@
 package com.example.mapita
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -34,6 +35,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
@@ -51,6 +53,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,18 +69,32 @@ import com.example.mapita.ui.screens.Perfil
 import com.example.mapita.ui.screens.Soporte
 import com.example.mapita.ui.screens3.ExamenIngreso
 import com.example.mapita.ui.theme.MAPITATheme
+import com.example.mapita.utils.IdiomaUtils
+import com.example.mapita.viewmodel.IdiomaViewModel
 import com.example.myapplication.screens.CarrerasScreen
 import com.example.myapplication.screens.DetalleSalonScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase?.let { context ->
+            val languageCode = IdiomaUtils.getCurrentLanguage(context)
+            IdiomaUtils.setAppLocale(context, languageCode)
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MAPITATheme {
-                AppWithSplashScreen()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    AppWithSplashScreen()
+                }
             }
         }
     }
@@ -155,7 +172,7 @@ fun SplashScreen() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             CircularProgressIndicator()
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Cargando...", style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(R.string.loading), style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
@@ -170,7 +187,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Iniciar sesión") }
+                title = { Text(stringResource(R.string.login)) }
             )
         }
     ) { innerPadding ->
@@ -185,14 +202,14 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Correo electrónico") },
+                label = { Text(stringResource(R.string.email)) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contraseña") },
+                label = { Text(stringResource(R.string.password)) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -216,7 +233,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Ingresar")
+                Text(stringResource(R.string.enter_main))
             }
             if (errorMessage.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -237,23 +254,23 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
         drawerContent = {
             ModalDrawerSheet {
                 Text(
-                    "Opciones",
+                    stringResource(R.string.options),
                     modifier = Modifier.padding(10.dp),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text("Soporte Técnico") },
+                    label = { Text(stringResource(R.string.st_modal)) },
                     selected = false,
                     onClick = { navController.navigate("soporte") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Acerca de ") },
+                    label = { Text(stringResource(R.string.about_modal)) },
                     selected = false,
                     onClick = { navController.navigate("acerca_de") }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Idioma ") },
+                    label = { Text(stringResource(R.string.language_modal)) },
                     selected = false,
                     onClick = { navController.navigate("idioma") }
                 )
@@ -269,7 +286,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                "Instituto Tecnológico de Ags",
+                                stringResource(R.string.instituto_tecnologico_de_ags),
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text("Nombre de usuario", style = MaterialTheme.typography.bodySmall)
@@ -320,7 +337,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                         .padding(vertical = 8.dp)
                         .width(200.dp)
                 ) {
-                    Text("Acceso")
+                    Text(stringResource(R.string.str_acceso_btn))
                 }
 
                 Button(
@@ -329,7 +346,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                         .padding(vertical = 8.dp)
                         .width(200.dp)
                 ) {
-                    Text("Estacionamiento")
+                    Text(stringResource(R.string.str_estacionamiento_btn))
                 }
 
                 Button(
@@ -338,7 +355,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                         .padding(vertical = 8.dp)
                         .width(200.dp)
                 ) {
-                    Text("Busca tu salón")
+                    Text(stringResource(R.string.str_busca_tu_salon_btn))
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -352,7 +369,7 @@ fun MainScreen(onLogout: () -> Unit, navController: NavHostController) {
                         .padding(vertical = 8.dp)
                         .width(200.dp)
                 ) {
-                    Text("Salir", color = MaterialTheme.colorScheme.onError)
+                    Text(stringResource(R.string.exit_main), color = MaterialTheme.colorScheme.onError)
                 }
             }
         }
